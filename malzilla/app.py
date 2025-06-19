@@ -6,6 +6,9 @@ from werkzeug.utils import secure_filename
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'exe', 'dll', 'pdf', 'doc', 'docx', 'apk', 'zip', 'rar'}
 
+# ✅ Ensure uploads folder exists at startup (works both locally and on Render)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -49,5 +52,4 @@ def scan():
         return render_template('index.html', error="Unsupported file type!")
 
 if __name__ == '__main__':
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.run(debug=True)
