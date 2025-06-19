@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malzilla — Malware Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
+  <div class="bg-gray-800 shadow-lg rounded-xl p-8 w-full max-w-2xl">
+    <h1 class="text-3xl font-bold text-center mb-4 text-yellow-300">🦠 Malzilla</h1>
+    <p class="text-center text-gray-400 mb-6">VirusTotal-style malware file scanner built with ❤️ using Flask</p>
+
+    <form action="{{ url_for('scan') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+  <input type="file" name="file" accept=".exe,.pdf,.zip,.doc,.docx,.js,.py,.sh" required class="w-full p-2 bg-gray-700 rounded border border-gray-600">
+  <button type="submit" class="w-full bg-yellow-400 text-black font-semibold py-2 rounded hover:bg-yellow-300 transition">Upload & Analyze</button>
+</form>
+
+
+    {% if result %}
+    <div class="mt-6 bg-gray-700 rounded p-4">
+      <h2 class="text-xl font-bold text-yellow-400 mb-2">Analysis Report:</h2>
+      <ul class="space-y-2 text-sm">
+        <li><strong>File Name:</strong> {{ result.name }}</li>
+        <li><strong>File Type (MIME):</strong> {{ result.type }}</li>
+        <li><strong>File Type (Description):</strong> {{ result.desc }}</li>
+        <li><strong>File Size:</strong> {{ result.size }} bytes</li>
+        <li><strong>MD5:</strong> {{ result.hashes.md5 }}</li>
+        <li><strong>SHA1:</strong> {{ result.hashes.sha1 }}</li>
+        <li><strong>SHA256:</strong> {{ result.hashes.sha256 }}</li>
+        {% if result.yara %}
+        <li><strong>YARA Matches:</strong> {{ result.yara|join(', ') }}</li>
+        {% else %}
+        <li><strong>YARA Matches:</strong> None</li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
